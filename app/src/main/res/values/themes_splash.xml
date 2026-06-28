@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!--
+      res/values/themes.xml  (merge into your existing file)
+
+      Uses the official androidx SplashScreen API (core-splashscreen).
+      Add this to app/build.gradle:
+          implementation "androidx.core:core-splashscreen:1.0.1"
+    -->
+
+    <!-- The splash theme your launcher activity starts with -->
+    <style name="Theme.Logit.Splash" parent="Theme.SplashScreen">
+        <!-- background fill behind the icon -->
+        <item name="windowSplashScreenBackground">@color/logit_green</item>
+        <!-- the animated launch icon -->
+        <item name="windowSplashScreenAnimatedIcon">@drawable/avd_logit_splash</item>
+        <!-- how long to keep the splash up so the animation can play (ms) -->
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+        <!-- theme to hand off to once the app is ready -->
+        <item name="postSplashScreenTheme">@style/Theme.Logit</item>
+    </style>
+
+</resources>

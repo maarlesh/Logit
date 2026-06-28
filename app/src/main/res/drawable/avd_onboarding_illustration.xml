@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  res/drawable/avd_onboarding_illustration.xml
+  Jetpack Compose usage:
+    val img = AnimatedImageVector.animatedVectorResource(R.drawable.avd_onboarding_illustration)
+    var atEnd by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) { atEnd = true }
+    Image(painter = rememberAnimatedVectorPainter(img, atEnd), contentDescription = null)
+
+  Sequence (1.05s total):
+    0   ms  phone slides up + fades in
+    280 ms  rupee draws on (5 strokes, staggered)
+    380 ms  saffron bubbles pop in (overshoot)
+    720 ms  checkmarks draw on
+    900 ms  all elements float (infinite, staggered translateY)
+-->
+<animated-vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+
+    <aapt:attr name="android:drawable">
+        <vector
+            android:width="280dp"
+            android:height="240dp"
+            android:viewportWidth="280"
+            android:viewportHeight="240">
+
+            <!-- warm background (static) -->
+            <path android:fillColor="#F8F6F1"
+                android:pathData="M20,0 H260 Q280,0 280,20 V220 Q280,240 260,240 H20 Q0,240 0,220 V20 Q0,0 20,0 Z"/>
+
+            <!-- phone group (slides up) -->
+            <group android:name="phoneGrp"
+                android:translateX="0" android:translateY="22"
+                android:alpha="1">
+                <!-- phone body -->
+                <path android:fillColor="#1A6B4A"
+                    android:pathData="M114,28 H166 Q184,28 184,46 V166 Q184,184 166,184 H114 Q96,184 96,166 V46 Q96,28 114,28 Z"/>
+                <!-- screen -->
+                <path android:fillColor="#E8F1EC"
+                    android:pathData="M105,36 H175 Q179,36 179,40 V172 Q179,176 175,176 H105 Q101,176 101,172 V40 Q101,36 105,36 Z"/>
+                <!-- rupee line 1 -->
+                <path android:name="r1" android:strokeColor="#1A6B4A" android:strokeWidth="5"
+                    android:strokeLineCap="round" android:fillColor="#00000000"
+                    android:trimPathEnd="0"
+                    android:pathData="M125,90 H155"/>
+                <!-- rupee line 2 -->
+                <path android:name="r2" android:strokeColor="#1A6B4A" android:strokeWidth="5"
+                    android:strokeLineCap="round" android:fillColor="#00000000"
+                    android:trimPathEnd="0"
+                    android:pathData="M125,100 H155"/>
+                <!-- rupee vertical -->
+                <path android:name="r3" android:strokeColor="#1A6B4A" android:strokeWidth="5"
+                    android:strokeLineCap="round" android:fillColor="#00000000"
+                    android:trimPathEnd="0"
+                    android:pathData="M132,100 V118"/>
+                <!-- rupee curve -->
+                <path android:name="r4" android:strokeColor="#1A6B4A" android:strokeWidth="5"
+                    android:strokeLineCap="round" android:fillColor="#00000000"
+                    android:trimPathEnd="0"
+                    android:pathData="M132,100 C148,100 148,118 132,118"/>
+                <!-- rupee diagonal -->
+                <path android:name="r5" android:strokeColor="#1A6B4A" android:strokeWidth="5"
+                    android:strokeLineCap="round" android:fillColor="#00000000"
+                    android:trimPathEnd="0"
+                    android:pathData="M132,118 L148,138"/>
+            </group>
+
+            <!-- left saffron bubble group (float + pop) -->
+            <group android:name="b1Float" android:pivotX="52" android:pivotY="64">
+                <group android:name="b1Pop" android:pivotX="52" android:pivotY="64"
+                    android:scaleX="0" android:scaleY="0">
+                    <path android:fillColor="#E8A020"
+                        android:pathData="M52,42 a22,22 0 1,0 0.001,0 Z"/>
+                    <path android:name="chk1" android:strokeColor="#FFFFFF" android:strokeWidth="4"
+                        android:strokeLineCap="round" android:strokeLineJoin="round"
+                        android:fillColor="#00000000" android:trimPathEnd="0"
+                        android:pathData="M42,64 L49,71 L63,55"/>
+                </group>
+            </group>
+
+            <!-- right saffron bubble -->
+            <group android:name="b2Float" android:pivotX="228" android:pivotY="76">
+                <group android:name="b2Pop" android:pivotX="228" android:pivotY="76"
+                    android:scaleX="0" android:scaleY="0">
+                    <path android:fillColor="#E8A020" android:fillAlpha="0.78"
+                        android:pathData="M228,58 a18,18 0 1,0 0.001,0 Z"/>
+                    <path android:name="chk2" android:strokeColor="#FFFFFF" android:strokeWidth="3.5"
+                        android:strokeLineCap="round" android:strokeLineJoin="round"
+                        android:fillColor="#00000000" android:trimPathEnd="0"
+                        android:pathData="M219,76 L225,82 L238,68"/>
+                </group>
+            </group>
+
+            <!-- green confirm bubble -->
+            <group android:name="b3Float" android:pivotX="232" android:pivotY="150">
+                <group android:name="b3Pop" android:pivotX="232" android:pivotY="150"
+                    android:scaleX="0" android:scaleY="0">
+                    <path android:fillColor="#1A6B4A"
+                        android:pathData="M232,130 a20,20 0 1,0 0.001,0 Z"/>
+                    <path android:name="chk3" android:strokeColor="#FFFFFF" android:strokeWidth="3.5"
+                        android:strokeLineCap="round" android:strokeLineJoin="round"
+                        android:fillColor="#00000000" android:trimPathEnd="0"
+                        android:pathData="M223,150 L229,156 L242,141"/>
+                </group>
+            </group>
+
+            <!-- decorative amber dot -->
+            <group android:name="b4Float" android:pivotX="44" android:pivotY="152">
+                <group android:name="b4Pop" android:pivotX="44" android:pivotY="152"
+                    android:scaleX="0" android:scaleY="0">
+                    <path android:fillColor="#E8A020" android:fillAlpha="0.38"
+                        android:pathData="M44,139 a13,13 0 1,0 0.001,0 Z"/>
+                </group>
+            </group>
+
+            <!-- ground dashes (static) -->
+            <path android:strokeColor="#DED9CB" android:strokeWidth="2.5"
+                android:strokeLineCap="round" android:fillColor="#00000000"
+                android:pathData="M88,208 H192"/>
+        </vector>
+    </aapt:attr>
+
+    <!-- ── Phone slide-up ── -->
+    <target android:name="phoneGrp">
+        <aapt:attr name="android:animation">
+            <objectAnimator android:propertyName="translateY"
+                android:valueFrom="22" android:valueTo="0"
+                android:duration="600" android:interpolator="@android:interpolator/overshoot"/>
+        </aapt:attr>
+    </target>
+
+    <!-- ── Rupee draw-on ── -->
+    <target android:name="r1">
+        <aapt:attr name="android:animation">
+            <objectAnimator android:propertyName="trimPathEnd"
+                android:valueFrom="0" android:valueTo="1"
+                android:startOffset="280" android:duration="200"
+                android:interpolator="@android:interpolator/decelerate_cubic"/>
+        </aapt:attr>
+    </target>
+    <target android:name="r2">
+        <aapt:attr name="android:animation">
+            <objectAnimator android:propertyName="trimPathEnd"
+                android:valueFrom="0" android:valueTo="1"
+                android:startOffset="400" android:duration="200"
+                android:interpolator="@android:interpolator/decelerate_cubic"/>
+        </aapt:attr>
+    </target>
+    <target android:name="r3">
+        <aapt:attr name="android:animation">
+            <objectAnimator android:propertyName="trimPathEnd"
+                android:valueFrom="0" android:valueTo="1"
+                android:startOffset="500" android:duration="240"
+                android:interpolator="@android:interpolator/decelerate_cubic"/>
+        </aapt:attr>
+    </target>
+    <target android:name="r4">
+        <aapt:attr name="android:animation">
+            <objectAnimator android:propertyName="trimPathEnd"
+                android:valueFrom="0" android:valueTo="1"
+                android:startOffset="620" android:duration="240"
+                android:interpolator="@android:interpolator/decelerate_cubic"/>
+        </aapt:attr>
+    </target>
+    <target android:name="r5">
+        <aapt:attr name="android:animation">
+            <objectAnimator android:propertyName="trimPathEnd"
+                android:valueFrom="0" android:valueTo="1"
+                android:startOffset="740" android:duration="260"
+                android:interpolator="@android:interpolator/decelerate_cubic"/>
+        </aapt:attr>
+    </target>
+
+    <!-- ── Bubble pops ── -->
+    <target android:name="b1Pop">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator android:propertyName="scaleX"
+                    android:valueFrom="0" android:valueTo="1"
+                    android:startOffset="380" android:duration="440"
+                    android:interpolator="@android:interpolator/overshoot"/>
+                <objectAnimator android:propertyName="scaleY"
+                    android:valueFrom="0" android:valueTo="1"
+                    android:startOffset="380" android:duration="440"
+                    android:interpolator="@android:interpolator/overshoot"/>
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="b2Pop">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator android:propertyName="scaleX"
+                    android:valueFrom="0" android:valueTo="1"
+                    android:startOffset="560" android:duration="440"
+                    android:interpolator="@android:interpolator/overshoot"/>
+                <objectAnimator android:propertyName="scaleY"
+                    android:valueFrom="0" android:valueTo="1"
+                    android:startOffset="560" android:duration="440"
+                    android:interpolator="@android:interpolator/overshoot"/>
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="b3Pop">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator android:propertyName="scaleX"
+                    android:valueFrom="0" android:valueTo="1"
+                    android:startOffset="740" android:duration="440"
+                    android:interpolator="@android:interpolator/overshoot"/>
+                <objectAnimator android:propertyName="scaleY"
+                    android:valueFrom="0" android:valueTo="1"
+                    android:startOffset="740" android:duration="440"
+                    android:interpolator="@android:interpolator/overshoot"/>
+            </set>
+        </aapt:attr>
+    </target>
+    <target android:name="b4Pop">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator android:propertyName="scaleX"
+                    android:valueFrom="0" android:valueTo="1"
+                    android:startOffset="180" android:duration="380"
+                    android:interpolator="@android:interpolator/decelerate_quint"/>
+                <objectAnimator android:propertyName="scaleY"
+                    android:valueFrom="0" android:valueTo="1"
+                    android:startOffset="180" android:duration="380"
+                    android:interpolator="@android:interpolator/decelerate_quint"/>
+            </set>
+        </aapt:attr>
+    </target>
+
+    <!-- ── Checkmark draw-on ── -->
+    <target android:name="chk1">
+        <aapt:attr name="android:animation">
+            <objectAnimator android:propertyName="trimPathEnd"
+                android:valueFrom="0" android:valueTo="1"
+                android:startOffset="580" android:duration="340"
+                android:interpolator="@android:interpolator/fast_out_slow_in"/>
+        </aapt:attr>
+    </target>
+    <target android:name="chk2">
+        <aapt:attr name="android:animation">
+            <objectAnimator android:propertyName="trimPathEnd"
+                android:valueFrom="0" android:valueTo="1"
+                android:startOffset="760" android:duration="280"
+                android:interpolator="@android:interpolator/fast_out_slow_in"/>
+        </aapt:attr>
+    </target>
+    <target android:name="chk3">
+        <aapt:attr name="android:animation">
+            <objectAnimator android:propertyName="trimPathEnd"
+                android:valueFrom="0" android:valueTo="1"
+                android:startOffset="940" android:duration="280"
+                android:interpolator="@android:interpolator/fast_out_slow_in"/>
+        </aapt:attr>
+    </target>
+
+    <!-- ── Float (infinite, after intro) ── -->
+    <target android:name="b1Float">
+        <aapt:attr name="android:animation">
+            <objectAnimator android:propertyName="translateY"
+                android:valueFrom="0" android:valueTo="-7"
+                android:startOffset="1100" android:duration="1400"
+                android:repeatCount="infinite" android:repeatMode="reverse"
+                android:interpolator="@android:interpolator/accelerate_decelerate"/>
+        </aapt:attr>
+    </target>
+    <target android:name="b2Float">
+        <aapt:attr name="android:animation">
+            <objectAnimator android:propertyName="translateY"
+                android:valueFrom="0" android:valueTo="-9"
+                android:startOffset="1300" android:duration="1600"
+                android:repeatCount="infinite" android:repeatMode="reverse"
+                android:interpolator="@android:interpolator/accelerate_decelerate"/>
+        </aapt:attr>
+    </target>
+    <target android:name="b3Float">
+        <aapt:attr name="android:animation">
+            <objectAnimator android:propertyName="translateY"
+                android:valueFrom="0" android:valueTo="-5"
+                android:startOffset="1500" android:duration="1250"
+                android:repeatCount="infinite" android:repeatMode="reverse"
+                android:interpolator="@android:interpolator/accelerate_decelerate"/>
+        </aapt:attr>
+    </target>
+    <target android:name="b4Float">
+        <aapt:attr name="android:animation">
+            <objectAnimator android:propertyName="translateY"
+                android:valueFrom="0" android:valueTo="-6"
+                android:startOffset="1700" android:duration="1800"
+                android:repeatCount="infinite" android:repeatMode="reverse"
+                android:interpolator="@android:interpolator/accelerate_decelerate"/>
+        </aapt:attr>
+    </target>
+</animated-vector>

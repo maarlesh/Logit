@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- res/values/colors.xml (merge into your existing file) -->
+    <color name="logit_green">#1A6B4A</color>
+    <color name="logit_green_deep">#104F35</color>
+    <color name="logit_saffron">#E8A020</color>
+    <color name="logit_bg">#F8F6F1</color>
+</resources>

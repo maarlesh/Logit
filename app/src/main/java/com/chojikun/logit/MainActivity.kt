@@ -1,10 +1,11 @@
 package com.chojikun.logit
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -13,17 +14,22 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.chojikun.logit.navigation.AppNavGraph
 import com.chojikun.logit.ui.feature.onboarding.EntryScreen
 import com.chojikun.logit.ui.theme.LogitTheme
+import com.chojikun.logit.viewmodel.MainViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+    private val viewModel: MainViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
+        splashScreen.setKeepOnScreenCondition { viewModel.isFirstLaunch.value == null }
         enableEdgeToEdge()
         setContent {
             LogitTheme {
-                Scaffold {
-                    AppNavGraph()
+                Scaffold { innerPadding ->
+                    AppNavGraph(modifier = Modifier.padding(innerPadding))
                 }
             }
         }

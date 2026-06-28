@@ -33,7 +33,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,13 +40,18 @@ import com.chojikun.logit.R
 
 @OptIn(ExperimentalAnimationGraphicsApi::class)
 @Composable
-fun EntryScreen(modifier: Modifier = Modifier) {
+fun EntryScreen(
+    modifier: Modifier = Modifier,
+    onGettingStarted: () -> Unit = {},
+    onSigningInTapped: () -> Unit = {},
+) {
     val image = AnimatedImageVector.animatedVectorResource(R.drawable.avd_onboarding_illustration)
     var atEnd by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) { atEnd = true } // auto-plays on screen entry
 
     Column(
         modifier = modifier.fillMaxHeight().padding(top = 16.dp, start = 16.dp, end = 16.dp),
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -91,6 +95,10 @@ fun EntryScreen(modifier: Modifier = Modifier) {
                 lineHeight =  40.sp,
             )
         }
+
+        Spacer(
+            modifier = Modifier.height(16.dp)
+        )
 
         Row(
 
@@ -161,9 +169,9 @@ fun EntryScreen(modifier: Modifier = Modifier) {
                 "No ads. Ever.\n"
             )
         }
-        Spacer(modifier = Modifier.weight(1f))
+//        Spacer(modifier = Modifier.weight(1f))
         CommonButton(
-            onClick = { /*TODO*/ },
+            onClick = onGettingStarted,
             text = "Getting Started!",
         )
         Spacer(modifier =Modifier.height(16.dp))
@@ -178,7 +186,9 @@ fun EntryScreen(modifier: Modifier = Modifier) {
                 "Sign in",
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.clickable { /*TODO*/ }
+                modifier = Modifier.clickable {
+                    onSigningInTapped()
+                }
             )
         }
         Spacer(modifier =Modifier.height(16.dp))

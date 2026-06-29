@@ -1,6 +1,7 @@
 [versions]
 agp = "9.1.1"
 animationGraphics = "1.11.3"
+argon2kt = "1.6.0"
 coreKtx = "1.18.0"
 coreSplashscreen = "1.2.0"
 datastorePreferences = "1.2.1"
@@ -20,6 +21,7 @@ androidx-compose-animation-graphics = { module = "androidx.compose.animation:ani
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
+argon2kt = { module = "com.lambdapioneer.argon2kt:argon2kt", version.ref = "argon2kt" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

@@ -11,10 +11,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.chojikun.logit.navigation.AppNavGraph
-import com.chojikun.logit.ui.feature.onboarding.EntryScreen
+import com.chojikun.logit.core.navigation.AppNavGraph
+import com.chojikun.logit.feature.auth.presentation.EntryScreen
+import com.chojikun.logit.core.presentation.MainViewModel
 import com.chojikun.logit.ui.theme.LogitTheme
-import com.chojikun.logit.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

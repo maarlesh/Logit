@@ -65,6 +65,9 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
+    implementation(libs.argon2kt)
     implementation(libs.androidx.navigation.compose)
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation("androidx.compose.material:material-icons-extended")
+    implementation(libs.argon2kt)
 }

@@ -1,4 +1,4 @@
-package com.chojikun.logit.util
+package com.chojikun.logit.core.util
 
 import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.map
 private val Context.dataStore by preferencesDataStore(name = "app_prefs")
 
 class FirstLaunchManager @Inject constructor(
-    @ApplicationContext private val context: Context
+    @param:ApplicationContext private val context: Context
 ) {
     private val isFirstLaunchKey = booleanPreferencesKey("is_first_launch")
 

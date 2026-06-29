@@ -1,8 +1,8 @@
-package com.chojikun.logit.viewmodel
+package com.chojikun.logit.core.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.chojikun.logit.util.FirstLaunchManager
+import com.chojikun.logit.core.util.FirstLaunchManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted

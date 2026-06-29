@@ -1,4 +1,4 @@
-package com.chojikun.logit.ui.feature.onboarding
+package com.chojikun.logit.feature.auth.presentation
 
 import androidx.compose.animation.graphics.ExperimentalAnimationGraphicsApi
 import androidx.compose.animation.graphics.res.animatedVectorResource
@@ -47,15 +47,13 @@ fun EntryScreen(
 ) {
     val image = AnimatedImageVector.animatedVectorResource(R.drawable.avd_onboarding_illustration)
     var atEnd by remember { mutableStateOf(false) }
-    LaunchedEffect(Unit) { atEnd = true } // auto-plays on screen entry
+    LaunchedEffect(Unit) { atEnd = true }
 
     Column(
         modifier = modifier.fillMaxHeight().padding(top = 16.dp, start = 16.dp, end = 16.dp),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 "L", modifier = Modifier
                     .background(MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(8.dp))
@@ -63,9 +61,7 @@ fun EntryScreen(
                 MaterialTheme.colorScheme.onPrimary,
                 style = MaterialTheme.typography.titleSmall
             )
-            Spacer(
-                modifier = Modifier.width(10.dp)
-            )
+            Spacer(modifier = Modifier.width(10.dp))
             Text(
                 "Logit",
                 modifier,
@@ -73,18 +69,13 @@ fun EntryScreen(
                 style = MaterialTheme.typography.displayLarge
             )
         }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ){
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             Image(
                 painter = rememberAnimatedVectorPainter(image, atEnd),
                 contentDescription = "Logit Illustration",
-                modifier = Modifier
             )
         }
-
-        Row(){
+        Row {
             Text(
                 "Your expenses, \n without the effort.",
                 modifier,
@@ -92,106 +83,62 @@ fun EntryScreen(
                 style = MaterialTheme.typography.displaySmall,
                 fontSize = 30.sp,
                 fontWeight = FontWeight.Bold,
-                lineHeight =  40.sp,
+                lineHeight = 40.sp,
             )
         }
-
-        Spacer(
-            modifier = Modifier.height(16.dp)
-        )
-
-        Row(
-
-        ){
+        Spacer(modifier = Modifier.height(16.dp))
+        Row {
             Icon(
                 imageVector = Icons.Default.Check,
-                contentDescription = "Checkmark success indicator",
+                contentDescription = null,
                 tint = Color.White,
-                modifier = Modifier
-                    .background(color = MaterialTheme.colorScheme.surfaceContainer, shape = CircleShape)
+                modifier = Modifier.background(color = MaterialTheme.colorScheme.surfaceContainer, shape = CircleShape)
             )
-            Spacer(
-                modifier = Modifier.width(10.dp)
-            )
-            Text(
-                "Your data lives on your phone\n"
-            )
+            Spacer(modifier = Modifier.width(10.dp))
+            Text("Your data lives on your phone\n")
         }
-
-        Row(
-
-        ){
+        Row {
             Icon(
                 imageVector = Icons.Default.Check,
-                contentDescription = "Checkmark success indicator",
+                contentDescription = null,
                 tint = Color.White,
-                modifier = Modifier
-                    .background(color = MaterialTheme.colorScheme.surfaceContainer, shape = CircleShape)
+                modifier = Modifier.background(color = MaterialTheme.colorScheme.surfaceContainer, shape = CircleShape)
             )
-            Spacer(
-                modifier = Modifier.width(10.dp)
-            )
-            Text(
-                "We never ask for your bank login or password\n"
-            )
+            Spacer(modifier = Modifier.width(10.dp))
+            Text("We never ask for your bank login or password\n")
         }
-        Row(
-
-        ){
+        Row {
             Icon(
                 imageVector = Icons.Default.Check,
-                contentDescription = "Checkmark success indicator",
+                contentDescription = null,
                 tint = Color.White,
-                modifier = Modifier
-                    .background(color = MaterialTheme.colorScheme.surfaceContainer, shape = CircleShape)
+                modifier = Modifier.background(color = MaterialTheme.colorScheme.surfaceContainer, shape = CircleShape)
             )
-            Spacer(
-                modifier = Modifier.width(10.dp)
-            )
-            Text(
-                "We never sell your data\n"
-            )
+            Spacer(modifier = Modifier.width(10.dp))
+            Text("We never sell your data\n")
         }
-        Row(
-
-        ){
+        Row {
             Icon(
                 imageVector = Icons.Default.Check,
-                contentDescription = "Checkmark success indicator",
+                contentDescription = null,
                 tint = Color.White,
-                modifier = Modifier
-                    .background(color = MaterialTheme.colorScheme.surfaceContainer, shape = CircleShape)
+                modifier = Modifier.background(color = MaterialTheme.colorScheme.surfaceContainer, shape = CircleShape)
             )
-            Spacer(
-                modifier = Modifier.width(10.dp)
-            )
-            Text(
-                "No ads. Ever.\n"
-            )
+            Spacer(modifier = Modifier.width(10.dp))
+            Text("No ads. Ever.\n")
         }
-//        Spacer(modifier = Modifier.weight(1f))
-        CommonButton(
-            onClick = onGettingStarted,
-            text = "Getting Started!",
-        )
-        Spacer(modifier =Modifier.height(16.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                "Already have an account? "
-            )
+        CommonButton(onClick = onGettingStarted, text = "Getting Started!")
+        Spacer(modifier = Modifier.height(16.dp))
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+            Text("Already have an account? ")
             Text(
                 "Sign in",
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.clickable {
-                    onSigningInTapped()
-                }
+                modifier = Modifier.clickable { onSigningInTapped() }
             )
         }
-        Spacer(modifier =Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
@@ -199,12 +146,13 @@ fun EntryScreen(
 fun CommonButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    text: String
-){
-    Button(onClick = { onClick()},
+    text: String,
+) {
+    Button(
+        onClick = onClick,
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(10.dp),
-        ) {
+    ) {
         Text(text = text)
     }
 }

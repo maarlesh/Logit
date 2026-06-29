@@ -1,4 +1,4 @@
-package com.chojikun.logit.navigation
+package com.chojikun.logit.core.navigation
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -9,8 +9,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.chojikun.logit.ui.feature.onboarding.EntryScreen
-import com.chojikun.logit.viewmodel.MainViewModel
+import com.chojikun.logit.feature.auth.presentation.EntryScreen
+import com.chojikun.logit.core.presentation.MainViewModel
+import com.chojikun.logit.feature.auth.presentation.RegisterScreen
 
 @Composable
 fun AppNavGraph(modifier: Modifier = Modifier) {
@@ -20,18 +21,18 @@ fun AppNavGraph(modifier: Modifier = Modifier) {
 
     if (isFirstLaunch == null) return
 
-    val startDestination = if (isFirstLaunch == true) Routes.ENTRY else Routes.LOGIN
+    val startDestination = if (isFirstLaunch == true) Routes.ENTRY else Routes.REGISTER
 
     NavHost(
         navController = navController,
         startDestination = startDestination,
-        modifier = modifier
+        modifier = modifier,
     ) {
         composable(Routes.ENTRY) {
             EntryScreen(
                 onGettingStarted = {
                     viewModel.onEntryScreenDone()
-                    navController.navigate(Routes.ENTRY) {
+                    navController.navigate(Routes.REGISTER) {
                         popUpTo(Routes.ENTRY) { inclusive = true }
                     }
                 },
@@ -40,13 +41,14 @@ fun AppNavGraph(modifier: Modifier = Modifier) {
                 }
             )
         }
-        composable("home") {
+        composable(Routes.HOME) {
             Text(text = "Home Screen")
         }
-        composable(
-            Routes.LOGIN
-        ) {
+        composable(Routes.LOGIN) {
             Text(text = "Sign In Screen")
+        }
+        composable(Routes.REGISTER) {
+            RegisterScreen()
         }
     }
 }

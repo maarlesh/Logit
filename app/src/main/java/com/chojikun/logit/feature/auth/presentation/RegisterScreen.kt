@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -20,20 +21,31 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.layout.LayoutCoordinates
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.*
 import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
-private val BackgroundCream  = Color(0xFFF2EDE4)
-private val FieldBorder      = Color(0xFFDDD8D0)
-private val LabelGray        = Color(0xFF8A8480)
-private val PlaceholderGray  = Color(0xFFB0AAA3)
+private val BackgroundCream = Color(0xFFF2EDE4)
+private val FieldBorder     = Color(0xFFDDD8D0)
+private val LabelGray       = Color(0xFF4A4540)
+private val PlaceholderGray = Color(0xFFADA8A0)
+private val FieldTextColor  = Color(0xFF1A1A1A)
 
 val LogitGreen = Color(0xFF1A6B4A)
 
@@ -45,18 +57,47 @@ fun RegisterScreen(
     var passwordVisible by remember { mutableStateOf(false) }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
 
+    val emailFocusRequester    = remember { FocusRequester() }
+    val passwordFocusRequester = remember { FocusRequester() }
+    val confirmFocusRequester  = remember { FocusRequester() }
+    val focusManager           = LocalFocusManager.current
+
+    val scrollState = rememberScrollState()
+    val scope       = rememberCoroutineScope()
+
+    // Track the scroll container's root position so we can calculate
+    // each field's offset within the scrollable content.
+    var containerRootY by remember { mutableStateOf(0f) }
+    var emailRootY     by remember { mutableStateOf(0f) }
+    var passwordRootY  by remember { mutableStateOf(0f) }
+    var confirmRootY   by remember { mutableStateOf(0f) }
+
+    // scrolls so the field appears ~24dp below the visible top
+    fun scrollToField(fieldRootY: Float) {
+        scope.launch {
+            delay(300) // wait for keyboard to finish animating
+            val contentY = (fieldRootY - containerRootY + scrollState.value - 24f)
+                .coerceAtLeast(0f).toInt()
+            scrollState.animateScrollTo(contentY)
+        }
+    }
+
+    LaunchedEffect(Unit) { emailFocusRequester.requestFocus() }
+
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(BackgroundCream)
-            .verticalScroll(rememberScrollState()),
+            .verticalScroll(scrollState)
+            .onGloballyPositioned { coords: LayoutCoordinates ->
+                containerRootY = coords.positionInRoot().y
+            },
     ) {
         AuthHeader(
             title = "Create your account",
             subtitle = "Free forever. No bank login. No ads.",
         )
 
-        // Drag handle
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -71,9 +112,7 @@ fun RegisterScreen(
             )
         }
 
-        Column(
-            modifier = Modifier.padding(horizontal = 24.dp),
-        ) {
+        Column(modifier = Modifier.padding(horizontal = 24.dp)) {
             Text(
                 text = "About you",
                 fontSize = 22.sp,
@@ -82,7 +121,7 @@ fun RegisterScreen(
             )
             Spacer(modifier = Modifier.height(20.dp))
 
-            FieldLabel(text = "EMAIL")
+            FieldLabel("EMAIL")
             Spacer(modifier = Modifier.height(6.dp))
             OutlinedTextField(
                 value = viewModel.email,
@@ -93,21 +132,25 @@ fun RegisterScreen(
                 },
                 isError = viewModel.emailError != null,
                 supportingText = { viewModel.emailError?.let { Text(it) } },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email,
+                    imeAction = ImeAction.Next,
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = { passwordFocusRequester.requestFocus() },
+                ),
                 singleLine = true,
                 shape = RoundedCornerShape(12.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedContainerColor = Color.White,
-                    focusedContainerColor = Color.White,
-                    errorContainerColor = Color.White,
-                    unfocusedBorderColor = FieldBorder,
-                    focusedBorderColor = LogitGreen,
-                ),
-                modifier = Modifier.fillMaxWidth(),
+                colors = fieldColors(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(emailFocusRequester)
+                    .onGloballyPositioned { emailRootY = it.positionInRoot().y }
+                    .onFocusChanged { if (it.isFocused) scrollToField(emailRootY) },
             )
             Spacer(modifier = Modifier.height(12.dp))
 
-            FieldLabel(text = "PASSWORD")
+            FieldLabel("PASSWORD")
             Spacer(modifier = Modifier.height(6.dp))
             OutlinedTextField(
                 value = viewModel.password,
@@ -128,21 +171,25 @@ fun RegisterScreen(
                 isError = viewModel.passwordError != null,
                 supportingText = { viewModel.passwordError?.let { Text(it) } },
                 visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Next,
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = { confirmFocusRequester.requestFocus() },
+                ),
                 singleLine = true,
                 shape = RoundedCornerShape(12.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedContainerColor = Color.White,
-                    focusedContainerColor = Color.White,
-                    errorContainerColor = Color.White,
-                    unfocusedBorderColor = FieldBorder,
-                    focusedBorderColor = LogitGreen,
-                ),
-                modifier = Modifier.fillMaxWidth(),
+                colors = fieldColors(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(passwordFocusRequester)
+                    .onGloballyPositioned { passwordRootY = it.positionInRoot().y }
+                    .onFocusChanged { if (it.isFocused) scrollToField(passwordRootY) },
             )
             Spacer(modifier = Modifier.height(12.dp))
 
-            FieldLabel(text = "CONFIRM PASSWORD")
+            FieldLabel("CONFIRM PASSWORD")
             Spacer(modifier = Modifier.height(6.dp))
             OutlinedTextField(
                 value = viewModel.confirmPassword,
@@ -163,17 +210,21 @@ fun RegisterScreen(
                 isError = viewModel.confirmPasswordError != null,
                 supportingText = { viewModel.confirmPasswordError?.let { Text(it) } },
                 visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done,
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = { focusManager.clearFocus() },
+                ),
                 singleLine = true,
                 shape = RoundedCornerShape(12.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedContainerColor = Color.White,
-                    focusedContainerColor = Color.White,
-                    errorContainerColor = Color.White,
-                    unfocusedBorderColor = FieldBorder,
-                    focusedBorderColor = LogitGreen,
-                ),
-                modifier = Modifier.fillMaxWidth(),
+                colors = fieldColors(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(confirmFocusRequester)
+                    .onGloballyPositioned { confirmRootY = it.positionInRoot().y }
+                    .onFocusChanged { if (it.isFocused) scrollToField(confirmRootY) },
             )
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -189,6 +240,7 @@ fun RegisterScreen(
                     text = "Create account →",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
+                    color = Color.White
                 )
             }
             Spacer(modifier = Modifier.height(20.dp))
@@ -203,13 +255,27 @@ fun RegisterScreen(
                     color = LogitGreen,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier.clickable { /* TODO: navigate to login */ },
+                    modifier = Modifier.clickable { },
                 )
             }
             Spacer(modifier = Modifier.height(32.dp))
         }
     }
 }
+
+@Composable
+private fun fieldColors() = OutlinedTextFieldDefaults.colors(
+    unfocusedTextColor        = FieldTextColor,
+    focusedTextColor          = FieldTextColor,
+    errorTextColor            = FieldTextColor,
+    unfocusedContainerColor   = Color.White,
+    focusedContainerColor     = Color.White,
+    errorContainerColor       = Color.White,
+    unfocusedBorderColor      = FieldBorder,
+    focusedBorderColor        = LogitGreen,
+    unfocusedLeadingIconColor = PlaceholderGray,
+    focusedLeadingIconColor   = LogitGreen,
+)
 
 @Composable
 private fun FieldLabel(text: String) {

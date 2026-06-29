@@ -153,6 +153,6 @@ fun CommonButton(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(10.dp),
     ) {
-        Text(text = text)
+        Text(text = text, color = Color.White)
     }
 }

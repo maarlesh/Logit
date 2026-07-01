@@ -1,8 +1,8 @@
 package com.chojikun.logit.core.util
 
 import android.util.Base64
-import com.chojikun.logit.feature.auth.data.model.KdfParams
 import com.chojikun.logit.feature.auth.data.model.RegisterPayload
+import com.chojikun.logit.feature.auth.domain.model.KdfParams
 import com.lambdapioneer.argon2kt.Argon2Kt
 import com.lambdapioneer.argon2kt.Argon2Mode
 import java.security.SecureRandom
@@ -58,6 +58,21 @@ object CryptoHelper {
             wrappedVaultKey = Base64.encodeToString(wrappedVaultKey, Base64.NO_WRAP),
             vaultKeyNonce   = Base64.encodeToString(nonce, Base64.NO_WRAP),
         )
+    }
+
+    fun deriveAuthKey(password: String, kdfSaltB64: String, kdfParams: KdfParams): String {
+        val salt = Base64.decode(kdfSaltB64, Base64.NO_WRAP)
+        val argon2 = Argon2Kt()
+        val keyBytes = argon2.hash(
+            mode = Argon2Mode.ARGON2_ID,
+            password = password.toByteArray(Charsets.UTF_8),
+            salt = salt,
+            tCostInIterations = kdfParams.iterations,
+            mCostInKibibyte = kdfParams.memory,
+            parallelism = kdfParams.parallelism,
+            hashLengthInBytes = 64,
+        ).rawHashAsByteArray()
+        return keyBytes.copyOfRange(32, 64).toHex()
     }
 
     private fun ByteArray.toHex() = joinToString("") { "%02x".format(it) }

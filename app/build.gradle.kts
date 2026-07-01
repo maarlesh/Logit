@@ -42,6 +42,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.compose.runtime.livedata)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -70,4 +71,6 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     implementation("androidx.compose.material:material-icons-extended")
     implementation(libs.argon2kt)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
 }

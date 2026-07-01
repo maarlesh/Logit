@@ -51,9 +51,22 @@ val LogitGreen = Color(0xFF1A6B4A)
 
 @Composable
 fun RegisterScreen(
+    onNavigateToHome: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(Unit) {
+        viewModel.navigateToHome.collect { onNavigateToHome() }
+    }
+
+    LaunchedEffect(viewModel.authError) {
+        val error = viewModel.authError ?: return@LaunchedEffect
+        snackbarHostState.showSnackbar(message = error, duration = SnackbarDuration.Long)
+        viewModel.clearAuthError()
+    }
+
     var passwordVisible by remember { mutableStateOf(false) }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
 
@@ -84,10 +97,16 @@ fun RegisterScreen(
 
     LaunchedEffect(Unit) { emailFocusRequester.requestFocus() }
 
+    Scaffold(
+        modifier = modifier,
+        containerColor = BackgroundCream,
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+    ) { innerPadding ->
     Column(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
             .background(BackgroundCream)
+            .padding(innerPadding)
             .verticalScroll(scrollState)
             .onGloballyPositioned { coords: LayoutCoordinates ->
                 containerRootY = coords.positionInRoot().y
@@ -230,18 +249,30 @@ fun RegisterScreen(
 
             Button(
                 onClick = viewModel::onRegisterClick,
+                enabled = !viewModel.isLoading,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp),
                 shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = LogitGreen),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = LogitGreen,
+                    disabledContainerColor = LogitGreen.copy(alpha = 0.6f),
+                ),
             ) {
-                Text(
-                    text = "Create account →",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.White
-                )
+                if (viewModel.isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(22.dp),
+                        color = Color.White,
+                        strokeWidth = 2.dp,
+                    )
+                } else {
+                    Text(
+                        text = "Create account →",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color.White,
+                    )
+                }
             }
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -255,12 +286,13 @@ fun RegisterScreen(
                     color = LogitGreen,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier.clickable { },
+                    modifier = Modifier.clickable(enabled = !viewModel.isLoading) { },
                 )
             }
             Spacer(modifier = Modifier.height(32.dp))
         }
     }
+    } // end Scaffold content
 }
 
 @Composable

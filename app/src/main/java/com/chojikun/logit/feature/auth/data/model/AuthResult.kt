@@ -1,0 +1,1 @@
+package com.chojikun.logit.feature.auth.data.model

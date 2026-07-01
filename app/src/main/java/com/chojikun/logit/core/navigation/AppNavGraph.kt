@@ -48,7 +48,13 @@ fun AppNavGraph(modifier: Modifier = Modifier) {
             Text(text = "Sign In Screen")
         }
         composable(Routes.REGISTER) {
-            RegisterScreen()
+            RegisterScreen(
+                onNavigateToHome = {
+                    navController.navigate(Routes.HOME) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
+            )
         }
     }
 }

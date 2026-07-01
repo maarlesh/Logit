@@ -1,17 +1,23 @@
 package com.chojikun.logit.feature.auth.presentation
 
-import android.util.Log
 import android.util.Patterns
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.chojikun.logit.core.util.CryptoHelper
+import androidx.lifecycle.viewModelScope
+import com.chojikun.logit.core.network.util.ApiResult
+import com.chojikun.logit.feature.auth.domain.usecase.RegisterUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import jakarta.inject.Inject
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor() : ViewModel() {
+class LoginViewModel @Inject constructor(
+    private val registerUseCase: RegisterUseCase,
+) : ViewModel() {
 
     var email by mutableStateOf("")
         private set
@@ -27,6 +33,14 @@ class LoginViewModel @Inject constructor() : ViewModel() {
         private set
     var confirmPasswordError by mutableStateOf<String?>(null)
         private set
+
+    var isLoading by mutableStateOf(false)
+        private set
+    var authError by mutableStateOf<String?>(null)
+        private set
+
+    private val _navigateToHome = Channel<Unit>(Channel.BUFFERED)
+    val navigateToHome = _navigateToHome.receiveAsFlow()
 
     fun onEmailChange(value: String) {
         email = value
@@ -48,10 +62,18 @@ class LoginViewModel @Inject constructor() : ViewModel() {
 
     fun onRegisterClick() {
         if (!validateAll()) return
-        val payload = CryptoHelper.prepareRegisterPayload(email, password)
-        Log.d("LoginViewModel", "Register payload: $payload")
-        // TODO: pass payload to AuthRepository once the network layer is set up
+        viewModelScope.launch {
+            isLoading = true
+            authError = null
+            when (val result = registerUseCase(email, password)) {
+                is ApiResult.Success -> _navigateToHome.send(Unit)
+                is ApiResult.Error   -> authError = result.message
+            }
+            isLoading = false
+        }
     }
+
+    fun clearAuthError() { authError = null }
 
     private fun validateAll(): Boolean {
         emailError           = validateEmailOrNull(email)

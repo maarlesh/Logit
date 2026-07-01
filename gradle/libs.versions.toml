@@ -2,6 +2,7 @@
 agp = "9.1.1"
 animationGraphics = "1.11.3"
 argon2kt = "1.6.0"
+converterGson = "3.0.0"
 coreKtx = "1.18.0"
 coreSplashscreen = "1.2.0"
 datastorePreferences = "1.2.1"
@@ -15,13 +16,17 @@ composeBom = "2024.09.00"
 navigationCompose = "2.9.8"
 hilt = "2.60"
 ksp = "2.3.9"
+retrofit = "3.0.0"
+runtimeLivedata = "1.11.3"
 
 [libraries]
 androidx-compose-animation-graphics = { module = "androidx.compose.animation:animation-graphics", version.ref = "animationGraphics" }
+androidx-compose-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedata", version.ref = "runtimeLivedata" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 argon2kt = { module = "com.lambdapioneer.argon2kt:argon2kt", version.ref = "argon2kt" }
+converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -40,6 +45,7 @@ androidx-compose-material3 = { group = "androidx.compose.material3", name = "mat
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
